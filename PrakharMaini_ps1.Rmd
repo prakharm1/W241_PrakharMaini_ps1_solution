@@ -21,9 +21,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 2) $Y_1(1)$ := Potential Outcome for subject $1$ if the subject is treated
 
-3) $E[Y_i(1)|d_i = 0]$ := Expected value of *Treated potential outcome* for subject $i$ who is *not* treated
+3) $E[Y_i(1)|d_i = 0]$ := Expected value of $Y_i(1)$ when subject is selected from the set of non-treated (i.e. control) subjects
 
-4) Difference between $E[Y_i(1)]$ and $E[Y_i(1)|d_i = 1]$ := $E[Y_i(1)]$ refers to the expected value of potential outcome for subject $i$ if treated where as $E[Y_i(1)|d_i = 1]$ refers to the expected value of $Y_i(1)$ when subject $i$ is selected from the set of treated subjects 
+4) Difference between $E[Y_i(1)]$ and $E[Y_i(1)|d_i = 1]$ := $E[Y_i(1)]$ refers to the expected value of $Y_i(1)$ if one subject is selected at random where as $E[Y_i(1)|d_i = 1]$ refers to the expected value of $Y_i(1)$ when subject is selected from the set of treated subjects 
 
 
 ```{r, child='questions/question_2.Rmd'}
