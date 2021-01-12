@@ -1,0 +1,139 @@
+---
+title: "Problem Set 1"
+author: "Prakhar Maini"
+date: "01/11/2020"
+output: html_document 
+theme: readable
+---
+
+```{r setup, warning=FALSE}
+library(data.table)
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, child='questions/question_1.Rmd'}
+```
+
+#### ANSWER
+
+1) $Y_i(1)$ := Potential Outcome for subject $i$ if the subject is exposed to the treatment (i.e. treated)
+
+2) $Y_1(1)$ := Potential Outcome for subject $1$ if the subject is treated
+
+3) $E[Y_i(1)|d_i = 0]$ := Expected value of *Treated potential outcome* for subject $i$ who is *not* treated
+
+4) Difference between $E[Y_i(1)]$ and $E[Y_i(1)|d_i = 1]$ := $E[Y_i(1)]$ refers to the expected value of potential outcome for subject $i$ if treated where as $E[Y_i(1)|d_i = 1]$ refers to the expected value of $Y_i(1)$ when subject $i$ is selected from the set of treated subjects 
+
+
+```{r, child='questions/question_2.Rmd'}
+```
+
+#### ANSWER
+
+We look at the following table
+
+|id|y_0|y_1|tau|
+|--|--|--|--|
+|1|10|12|2|
+|2|12|12|0|
+|3|15|18|3|
+|4|11|14|3|
+|5|10|15|5|
+|6|17|18|1|
+|7|16|16|0|
+
+From this table we see that 
+
+$$
+E[Y_i(1)] = \frac{12+12+18+14+15+18+16}{7} =15 
+$$
+
+$$
+E[Y_i(0)] = \frac{10+12+15+11+10+17+16}{7} =13
+$$
+
+So $E[Y_i(1)] - E[Y_i(0)] = 2$. 
+
+Now looking at the RHS we have:
+
+$$
+E[Y_i(1) - Y_i(0)] = \frac{2+0+3+3+5+1+0}{7} = 2
+$$
+This way we see that the parity holds between RHS and LHS of the equation $E[Y_i(1)] - E[Y_i(0)]= E[Y_i(1) - Y_i(0)]$. This is also true due to the linearity of expactation property. 
+
+In real life, a given subject $i$ will either be treated or not treated. If the suject is treated, we will observe $Y_i(1)$ and if not we will observe $Y_i(0)$ but we will not be able to observe both. Hence, in real life, we will not be able to construct such a full table.
+
+```{r, child='questions/question_3.Rmd'}
+```
+
+#### ANSWER
+
+Individual treatment effect for a child $i$ will be $\tau_i = Y_i(1) - Y_i(0)$. This way we can construct the following table. 
+
+|child|y_0|y_1|$\tau$|
+|--|--|--|--|
+|1|1.2|1.2|0|
+|2|0.1|0.7|0.6|
+|3|0.5|0.5|0|
+|4|0.8|0.8|0|
+|5|1.5|0.6|-0.9|
+|6|2.0|2.0|0|
+|7|1.3|1.3|0|
+|8|0.7|0.7|0|
+|9|1.1|1.1|0|
+|10|1.4|1.4|0|
+
+In order to explain this distribution of treatment effect, we can putforth following arguments:
+
+We see no effect for majority of kids because the effect of sun-light is small on visual acuity. However, some children might be playing around reflective surfaces or playing games which leads them to stare at sun for long time which impair their visual acuity. Some kids might be coming from not so financially well-off homes and are not able to get the right nutritions. This might impairs their visual acuity with or without playing outside for 10 hours a week. Some children while playing outside might be able to know about their existing eye-condition or deterioration in eye-sight and will be able to seek help (via change in diet and/or seeking medical help) at the right time which enables them to have better visual acuity. 
+
+Looking at the data, we see that the true ATE can be calculated as following:
+
+$$
+ATE_{true} = \frac{0.6-0.9}{10} = -0.03
+$$
+
+If we assign odd-numbered children to treatment group, we will be able to only observe $Y_i(1)$ for them and only $Y_i(0)$ for rest of the kids. Keeping this in mind we can do folloing computation
+
+$$
+E[ATE] = E[Y_i(1)|d_i=1] - E[Y_i(0)|d_i=0]
+$$
+
+looking at the real data we have 
+
+$E[Y_i(1)|d_i=1] = \frac{1.2+0.5+0.6+1.3+1.1}{5} = 0.94$ 
+and 
+$E[Y_i(0)|d_i=0] = \frac{0.1+0.8+2.0+0.7+1.4}{5} = 1.0$ 
+
+Hence our estimate of ATE will be $-0.06$
+
+We see from above calculations that the estimated ATE is 2x in size compared to $ATE_{true}$ and in the same direction. Intuitively, we expect some variation between the estimated value and true value because of the small size of population (i.e. 10). If the overall population size was bigger, we expect less variation to occur in calculated ATE vis-a-vis True-ATE due to sampling. 
+
+Coming to the number of possible ways to split 10 children in 2 groups, there are $2^{10}$ ways to do that (a binary choice for each children). However, due to the constraint that atleast 1 child should be in both test and control set, we need to remove 2 edge cases (i.e. all children in either test or control). Hence with the given constraint, we have $2^{10} - 2 = 1022$ ways of splitting 10 children into two groups.
+
+If we only do observational study and children 1-5 choose to be in the treatment set and 6-10 in control we will have $E[Y_i(1)] = \frac{1.2+0.7+0.5+0.8+0.6}{5} = 0.76$ and $E[Y_i(0)] = \frac{2.0+1.3+0.7+1.1+1.4}{5} = 1.30$. This way the observational study will estimate the effect size as $0.76 - 1.3 = -0.54$. 
+
+If we compare the result of the observational study (-0.54) with the $ATE_{true}$ (-0.03), we see a huge difference. This underscores the importance of randomization in an experiment when calculating the effect size. With out randomization and explicit intervention, kids with good eye-sight might have chosen to play outside more and kids with worse eye-sight might have chosen to not play out more. This resulted in a heavily biased effect size in the observational study. 
+
+
+```{r, child='questions/question_4.Rmd'}
+```
+
+#### ANSWER
+
+In the first case, though researcher has taken a random sample, the resulting difference in grades can't be causally related with enrollment in the early childhood education program. There might be systemic factors (such as socio-economic status etc.) which might be confounding the results becasue the enrollment to the childhood program may or may not be randomized. In that sense, this study is an observational study and the inference might be biased. 
+
+In the second case, we know that the core problem of assigning student to enrollment was done based on a systemic factor (i.e. need) and not randomly. This way, the core problem remains the same as the first study. The same factors that define "need" might be responsible for the the difference in ATE between test and control. The second study is also an observational study only where the inference might be biased. 
+
+Finally, in the third study, the student assignment to enrollment was random (i.e. based on coin flip). This solves the core problem. Now that we have random assignment and intervention (childhood education program) in place, the third study is an experiment and we expect the inference to be unbiased. 
+
+
+```{r, child='questions/question_5.Rmd'}
+```
+
+#### ANSWER
+
+The statement $E[Y_i(0)|D_i=0] = E[Y_i(0)|D_i=1]$ literally means that the **Expected value of treated potential outcome among subjects that receive treatment is same as the Expected value of treated potenntial outcome among subjects that don't receive treatment**. This statement is true only under random assignment of subjects in treatment and control groups. Essentially, this statement implies that random assignment into treatment group or control group is conveys no information about the potential value $Y_i(0)$ (i.e. potential value of outcome if the subject $i$ is not treated). This is true for $Y_i(1)$ as well. Random assignment ensures that observed expected value $E[Y_i(0)|D_i=0]$ is equal to unobserved expected value $E[Y_i(0)|D_i=1]$ which is in turn equal to the expected value $E[Y_i(0)]$.
+
+In the present circumstance, the attribution of students to test (listeing to death metal less than once / week) and control (listening to death meatal at least once / week) group is not random. There might be unobserved heterogeneity that might cause students from a cetain back-ground to listen to death metal more (e.g. divorced parents etc.). In that case, students in the control set are not representative of general student population. This will mena that the equality won't hold and we might have selection bias when calculating the treatment effect.
