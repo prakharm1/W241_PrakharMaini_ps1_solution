@@ -2,7 +2,7 @@
 title: "Problem Set 1"
 author: "Prakhar Maini"
 date: "01/11/2020"
-output: html_document 
+output: github_document 
 theme: readable
 ---
 
